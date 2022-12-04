@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using WeatherApp.Models;
 
 namespace WeatherApp.Controllers
@@ -19,8 +20,9 @@ namespace WeatherApp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherDTO> Get([FromBody] WeatherRequestDTO weatherRequestDTO)
+        public Task<IEnumerable<WeatherDTO>> Get([FromBody] WeatherRequestDTO weatherRequestDTO)
         {
+            _logger.LogInformation(weatherRequestDTO.ToString());
             _logger.LogInformation("Weather Forecast Request at: {time}", DateTime.Now);
             return _weatherservice.GetWeather(weatherRequestDTO);
         }
