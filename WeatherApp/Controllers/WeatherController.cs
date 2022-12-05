@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using WeatherApp.Models;
 
 namespace WeatherApp.Controllers
@@ -20,11 +19,19 @@ namespace WeatherApp.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<WeatherDTO>> Get([FromBody] WeatherRequestDTO weatherRequestDTO)
+        public async Task<ApiResponse<IEnumerable<WeatherDTO>>> Get([FromBody] WeatherRequestDTO weatherRequestDTO)
         {
             _logger.LogInformation(weatherRequestDTO.ToString());
             _logger.LogInformation("Weather Forecast Request at: {time}", DateTime.Now);
-            return _weatherservice.GetWeather(weatherRequestDTO);
+            try 
+            {
+                IEnumerable<WeatherDTO> result = await _weatherservice.GetWeather(weatherRequestDTO);
+                return ApiResponse<IEnumerable<WeatherDTO>>.SuccessResponse(data: result, message: "Query Success");
+            }
+            catch (Exception e)
+            {
+                return ApiResponse<IEnumerable<WeatherDTO>>.ErrorResponse(error: e.Message);
+            }
         }
 
         [HttpGet("cities")]

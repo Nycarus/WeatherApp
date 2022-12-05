@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Net;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.Json.Nodes;
-using WeatherApp.Controllers;
 
 namespace WeatherApp.Models
 {
@@ -30,7 +27,6 @@ namespace WeatherApp.Models
 
             if (!(weatherRequestDTO.Lon == null || weatherRequestDTO.Lat == null))
             {
-
                 _logger.LogInformation("Location Request");
 
                 decimal lat = Math.Round((decimal)weatherRequestDTO.Lat, 2);
@@ -38,24 +34,17 @@ namespace WeatherApp.Models
                 string url = $"{baseUrl}/data/2.5/forecast?lat={lat}" +
                     $"&lon={lon}&cnt={cnt}&appid={apiKey}";
 
-                try
-                {
-                    var data = await this.requestWeatherDataFromApi(url);
-                    if (data != null)
-                    {
-                        return data;
-                    }
-                    else
-                    {
-                        return Enumerable.Empty<WeatherDTO>();
-                    }
-                }
-                catch (Exception e) 
-                {
-                    _logger.LogError(e.ToString());
-                }
+                var data = await this.requestWeatherDataFromApi(url: url);
 
-                return Enumerable.Empty<WeatherDTO>();
+                if (data != null)
+                {
+                    return data;
+                }
+                else
+                {
+                    _logger.LogInformation("Location Request Failed: Data Returned Null.");
+                    throw new Exception(message: "Data queried but returned null.");
+                }
             }
             else if (!(String.IsNullOrEmpty(weatherRequestDTO.City) || String.IsNullOrEmpty(weatherRequestDTO.CountryCode)))
             {
@@ -65,28 +54,20 @@ namespace WeatherApp.Models
                 string city = (string)weatherRequestDTO.City.ToUpper();
                 string url = $"{baseUrl}/geo/1.0/direct?q={city},{countryCode}&limit={1}&appid={apiKey}";
 
-                try
+                var data = await requestWeatherDataFromApiUsingNames(url: url, cnt: cnt);
+                if (data != null)
                 {
-                    var data = await requestWeatherDataFromApiUsingNames(url, cnt);
-                    if (data != null)
-                    {
-                        return data;
-                    }
-                    else
-                    {
-                        return Enumerable.Empty<WeatherDTO>();
-                    }
+                    return data;
                 }
-                catch(Exception e)
+                else
                 {
-                    _logger.LogError(e.ToString());
+                    _logger.LogInformation("City Request Failed: Data Returned Null.");
+                    throw new Exception(message: "Data queried but returned null.");
                 }
-                return Enumerable.Empty<WeatherDTO>();
             }
             else
             {
-                // TODO: Throw Error, because no values
-                return Enumerable.Empty<WeatherDTO>();
+                throw new Exception(message: "Data pairs did not meet criteria. Provide lon with lat or city and countryCode together.");
             }
         }
 
@@ -107,18 +88,16 @@ namespace WeatherApp.Models
 
                     if (result == null)
                     {
-                        _logger.LogInformation("API returned empty json.");
-                        // TODO: Throw error for no content
-                        throw new Exception();
+                        _logger.LogInformation("API returned empty JSON.");
+                        throw new Exception("External API returned empty JSON.");
                     }
 
                     var data = result["list"];
 
-                    if (data == null)
+                    if (data == null || data.AsArray().Count == 0)
                     {
                         _logger.LogInformation("API returned empty list of data.");
-                        // TODO: Throw error for no content
-                        throw new Exception();
+                        throw new Exception("External API returned empty list of data.");
                     }
 
                     List<WeatherDTO> list = new List<WeatherDTO>();
@@ -147,7 +126,7 @@ namespace WeatherApp.Models
                 }
                 else
                 {
-                    return Enumerable.Empty<WeatherDTO>();
+                    throw new Exception("Unable to communicate with the External API.");
                 }
             }
         }
@@ -162,14 +141,20 @@ namespace WeatherApp.Models
                     string responseString = await res.Content.ReadAsStringAsync();
                     var result = JsonObject.Parse(responseString);
 
-                    if(result == null)
+                    _logger.LogInformation(result.ToJsonString());
+                    _logger.LogInformation(result.ToJsonString());
+                    _logger.LogInformation(result.AsArray().Count.ToString());
+
+                    if (result == null || result.AsArray().Count == 0)
                     {
-                        return Enumerable.Empty<WeatherDTO>();
+                        _logger.LogInformation("API returned empty JSON.");
+                        throw new Exception("External API returned empty JSON.");
                     }
 
                     if (result[0]["lat"] == null || result[0]["lon"] == null)
                     {
-                        return Enumerable.Empty<WeatherDTO>();
+                        _logger.LogInformation("API returned empty list of data.");
+                        throw new Exception("External API returned empty list of data.");
                     }
                     else
                     {
@@ -181,12 +166,12 @@ namespace WeatherApp.Models
                         url = $"{baseUrl}/data/2.5/forecast?lat={lat}" +
                     $"&lon={lon}&cnt={cnt}&appid={apiKey}";
 
-                        return await this.requestWeatherDataFromApi(url);
+                        return await this.requestWeatherDataFromApi(url: url);
                     }
                 }
                 else
                 {
-                    return Enumerable.Empty<WeatherDTO>();
+                    throw new Exception("Unable to communicate with the External API.");
                 }
             }
         }

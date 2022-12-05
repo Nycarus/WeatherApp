@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WeatherApp.Models
+﻿namespace WeatherApp.Models
 {
     public class WeatherDTO
     {

@@ -13,7 +13,7 @@ namespace WeatherApp.Models
         [Range(-90, 90, ErrorMessage = "Valid latitude value between (-90, 90)")]
         public decimal? Lat { get; set; }
 
-        [Range(-180, 180, ErrorMessage = "Valid longitude  value between (-180, 180)")]
+        [Range(-180, 180, ErrorMessage = "Valid longitude value between (-180, 180)")]
         public decimal? Lon { get; set; }
 
         [Range(1, 5, ErrorMessage = "Valid cnt value between (1, 5)")]
