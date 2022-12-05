@@ -3,6 +3,37 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-5">Weather Application</h1>
+
+    <form class='card p-3 bg-light'>
+        <div class="row mb-3">
+            <label for="city" class="col-sm-2 col-form-label">City:</label>
+            <div class="col-sm-10 my-auto">
+                <input type="text" class="form-control" id="city" placeholder="Toronto">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="countryCode" class="col-sm-2 col-form-label">Country Code:</label>
+            <div class="col-sm-10 my-auto">
+                <input type="text" class="form-control" id="countryCode" placeholder="CA">
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary mb-2">Get City Weather</button>
+            <button type="submit" class="btn btn-primary mb-2">Current Location Weather</button>
+        </div>
+    </form>
+
+    <div class='card p-3 bg-light mt-3' style="min-height: 50vh;">
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
 </div>
