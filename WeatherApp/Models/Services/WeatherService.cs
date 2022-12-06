@@ -22,7 +22,7 @@ namespace WeatherApp.Models.Services
         }
         public async Task<IEnumerable<WeatherDTO>> GetWeather(WeatherRequestDTO weatherRequestDTO)
         {
-            int cnt = weatherRequestDTO.Cnt ?? 5;
+            int cnt = weatherRequestDTO.Cnt ?? 40;
 
             string baseUrl = _config["WeatherApi:Url"];
             string apiKey = _config["WeatherApi:ServiceApiKey"];
@@ -34,7 +34,7 @@ namespace WeatherApp.Models.Services
                 decimal lat = Math.Round((decimal)weatherRequestDTO.Lat, 2);
                 decimal lon = Math.Round((decimal)weatherRequestDTO.Lon, 2);
                 string url = $"{baseUrl}/data/2.5/forecast?lat={lat}" +
-                    $"&lon={lon}&cnt={cnt}&appid={apiKey}";
+                    $"&lon={lon}&cnt={cnt}&appid={apiKey}&units=metric&mode=json";
 
                 var data = await requestWeatherDataFromApi(url: url);
 
@@ -166,7 +166,7 @@ namespace WeatherApp.Models.Services
                         decimal lon = (decimal)result[0]["lon"];
 
                         url = $"{baseUrl}/data/2.5/forecast?lat={lat}" +
-                    $"&lon={lon}&cnt={cnt}&appid={apiKey}";
+                    $"&lon={lon}&cnt={cnt}&appid={apiKey}&units=metric&mode=json";
 
                         return await requestWeatherDataFromApi(url: url);
                     }

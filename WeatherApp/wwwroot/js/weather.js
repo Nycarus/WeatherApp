@@ -11,12 +11,20 @@ async function RequestWeatherCity() {
         referrerPolicy: "no-referrer",
         body: JSON.stringify({ city: $("#city").val(), countryCode: $("#countryCode").val() })
     }).then((response) => {
-        return response.json();
+        if (response.ok) {
+            return response.json();
+        }
     }).then((result) => {
-        result["data"].forEach((data) => {
-            let element = BuildWeatherElement(data);
-            $("#weather-forcast").append(element);
-        })
+        if (result["data"] !== null) {
+            $("#weather-forcast").empty()
+            result["data"].forEach((data) => {
+                let element = BuildWeatherElement(data);
+                $("#weather-forcast").append(element);
+            })
+        }
+        else {
+            $("#weather-forcast").html(result["error"]);
+        }
     }).catch(err => {
         console.error('error occured: ', err.message)
         $("#weather-forcast").html(err.message)
@@ -44,12 +52,20 @@ async function RequestWeatherGeolocationSuccess(position) {
         referrerPolicy: "no-referrer",
         body: JSON.stringify({ lat: position.coords.latitude, lon: position.coords.longitude })
     }).then((response) => {
-        return response.json();
+        if (response.ok) {
+            return response.json();
+        }
     }).then((result) => {
-        result["data"].forEach((data) => {
-            let element = BuildWeatherElement(data);
-            $("#weather-forcast").append(element);
-        })
+        if (result["data"] !== null) {
+            $("#weather-forcast").empty()
+            result["data"].forEach((data) => {
+                let element = BuildWeatherElement(data);
+                $("#weather-forcast").append(element);
+            })
+        }
+        else {
+            $("#weather-forcast").html(result["error"]);
+        }
     }).catch(err => {
         console.error('error occured: ', err.message)
         $("#weather-forcast").html(err.message)
@@ -61,7 +77,18 @@ function RequestWeatherGeolocationFailure() {
 }
 
 function BuildWeatherElement(data) {
-    return `<div>${data["temp"]}</div>`
+    return (
+        `<div class="row-sm card justify-content-between">
+            <p>${data["time"]}</p>
+            <p>Temp: ${data["temp"]}&deg;C</p>
+            <p>Min Temp: ${data["tempMin"]}&deg;C</p>
+            <p>Max Temp: ${data["tempMax"]}&deg;C</p>
+            <p>Cloud: ${data["cloud"]}%</p>
+            <p>Humidity: ${data["humidity"]}%</p>
+            <p>Weather: ${data["weather"]}</p>
+            <p>Description: ${data["description"]}</p>
+        </div>`
+    )
 }
 
 $(document).ready(function () {
