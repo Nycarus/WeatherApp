@@ -1,14 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WeatherApp.Models
+namespace WeatherApp.Models.DTO
 {
     public class WeatherRequestDTO
     {
         [RegularExpression("^[a-zA-Z\\s]+$", ErrorMessage = "City name can only contain alphabet and space characters.")]
-        public String? City { get; set; }
+        public string? City { get; set; }
 
         [RegularExpression("^[a-zA-Z\\s]{2}$", ErrorMessage = "Country name can only contain alphabet characters with 2 spaces in length.")]
-        public String? CountryCode { get; set; }
+        public string? CountryCode { get; set; }
 
         [Range(-90, 90, ErrorMessage = "Valid latitude value between (-90, 90)")]
         public decimal? Lat { get; set; }

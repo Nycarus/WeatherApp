@@ -1,4 +1,4 @@
-﻿namespace WeatherApp.Models
+﻿namespace WeatherApp.Models.DTO
 {
     public class WeatherDTO
     {

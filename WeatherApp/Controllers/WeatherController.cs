@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WeatherApp.Models;
+using WeatherApp.Models.DTO;
+using WeatherApp.Models.Services;
 
 namespace WeatherApp.Controllers
 {
@@ -8,7 +10,7 @@ namespace WeatherApp.Controllers
     public class WeatherController : ControllerBase
     {
         private readonly ILogger<WeatherController> _logger;
-        private IWeatherService _weatherservice;
+        private readonly IWeatherService _weatherservice;
 
         public WeatherController(
             ILogger<WeatherController> logger,
@@ -18,10 +20,9 @@ namespace WeatherApp.Controllers
             _weatherservice = weatherservice;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<ApiResponse<IEnumerable<WeatherDTO>>> Get([FromBody] WeatherRequestDTO weatherRequestDTO)
         {
-            _logger.LogInformation(weatherRequestDTO.ToString());
             _logger.LogInformation("Weather Forecast Request at: {time}", DateTime.Now);
             try 
             {

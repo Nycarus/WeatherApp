@@ -2,8 +2,9 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using WeatherApp.Models.DTO;
 
-namespace WeatherApp.Models
+namespace WeatherApp.Models.Services
 {
     public class WeatherService : IWeatherService
     {
@@ -13,7 +14,8 @@ namespace WeatherApp.Models
         public WeatherService(
             ILogger<WeatherService> logger,
             IHttpClientFactory httpClientFactory,
-            IConfiguration config) {
+            IConfiguration config)
+        {
             _logger = logger;
             _config = config;
             _httpClientFactory = httpClientFactory;
@@ -34,7 +36,7 @@ namespace WeatherApp.Models
                 string url = $"{baseUrl}/data/2.5/forecast?lat={lat}" +
                     $"&lon={lon}&cnt={cnt}&appid={apiKey}";
 
-                var data = await this.requestWeatherDataFromApi(url: url);
+                var data = await requestWeatherDataFromApi(url: url);
 
                 if (data != null)
                 {
@@ -46,12 +48,12 @@ namespace WeatherApp.Models
                     throw new Exception(message: "Data queried but returned null.");
                 }
             }
-            else if (!(String.IsNullOrEmpty(weatherRequestDTO.City) || String.IsNullOrEmpty(weatherRequestDTO.CountryCode)))
+            else if (!(string.IsNullOrEmpty(weatherRequestDTO.City) || string.IsNullOrEmpty(weatherRequestDTO.CountryCode)))
             {
                 _logger.LogInformation("City Request");
 
-                string countryCode = (string)weatherRequestDTO.CountryCode;
-                string city = (string)weatherRequestDTO.City.ToUpper();
+                string countryCode = weatherRequestDTO.CountryCode;
+                string city = weatherRequestDTO.City.ToUpper();
                 string url = $"{baseUrl}/geo/1.0/direct?q={city},{countryCode}&limit={1}&appid={apiKey}";
 
                 var data = await requestWeatherDataFromApiUsingNames(url: url, cnt: cnt);
@@ -71,9 +73,9 @@ namespace WeatherApp.Models
             }
         }
 
-        public IEnumerable<String> GetListCities()
+        public IEnumerable<string> GetListCities()
         {
-            return new string[] {"city_test", "city_test_2"};
+            return new string[] { "city_test", "city_test_2" };
         }
 
         private async Task<IEnumerable<WeatherDTO>> requestWeatherDataFromApi(string url)
@@ -84,7 +86,7 @@ namespace WeatherApp.Models
                 if (res.IsSuccessStatusCode)
                 {
                     string responseString = await res.Content.ReadAsStringAsync();
-                    var result = JsonObject.Parse(responseString);
+                    var result = JsonNode.Parse(responseString);
 
                     if (result == null)
                     {
@@ -139,7 +141,7 @@ namespace WeatherApp.Models
                 if (res.IsSuccessStatusCode)
                 {
                     string responseString = await res.Content.ReadAsStringAsync();
-                    var result = JsonObject.Parse(responseString);
+                    var result = JsonNode.Parse(responseString);
 
                     _logger.LogInformation(result.ToJsonString());
                     _logger.LogInformation(result.ToJsonString());
@@ -166,7 +168,7 @@ namespace WeatherApp.Models
                         url = $"{baseUrl}/data/2.5/forecast?lat={lat}" +
                     $"&lon={lon}&cnt={cnt}&appid={apiKey}";
 
-                        return await this.requestWeatherDataFromApi(url: url);
+                        return await requestWeatherDataFromApi(url: url);
                     }
                 }
                 else
@@ -180,6 +182,6 @@ namespace WeatherApp.Models
     public interface IWeatherService
     {
         Task<IEnumerable<WeatherDTO>> GetWeather(WeatherRequestDTO weatherRequestDTO);
-        IEnumerable<String> GetListCities();
+        IEnumerable<string> GetListCities();
     }
 }

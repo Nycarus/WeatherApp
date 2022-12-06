@@ -1,4 +1,4 @@
-using WeatherApp.Models;
+using WeatherApp.Models.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

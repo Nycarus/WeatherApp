@@ -19,21 +19,16 @@
             </div>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary mb-2">Get City Weather</button>
-            <button type="submit" class="btn btn-primary mb-2">Current Location Weather</button>
+            <button id="cityButton" type="button" class="btn btn-primary mb-2">Get City Weather</button>
+            <button id="locationButton" type="button" class="btn btn-primary mb-2">Current Location Weather</button>
         </div>
     </form>
 
-    <div class='card p-3 bg-light mt-3' style="min-height: 50vh;">
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
+    <div id="weather-forcast" class='card p-3 bg-light mt-3' style="min-height: 50vh;">
+
     </div>
 </div>
-    </div>
-</div>
+
+@section WeatherScripts{
+    <script type="text/javascript" src="/js/weather.js"></script>
+}
