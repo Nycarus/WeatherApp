@@ -15,6 +15,4 @@ Purpose of this app is to explore .NET 6 MVC for educational purposes. The app i
         docker compose down
 
 ## Licenses
-SVG weather images are taken from [amcharts.com](https://www.amcharts.com/free-animated-svg-weather-icons/) under Creative Commons Attribution 4.0 International Public License.
-
 Weather data are taken from [openweathermap.org](https://openweathermap.org/faq).
