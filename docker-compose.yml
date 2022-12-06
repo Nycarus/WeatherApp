@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  WeatherApp:
+    container_name: Weather-App
+    image: weather-app
+    build:
+       context: .
+       dockerfile: WeatherApp/Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      WeatherApi:Url: http://api.openweathermap.org/
+      WeatherApi:ServiceApiKey: <insert_key>
