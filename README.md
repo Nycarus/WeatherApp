@@ -1,5 +1,5 @@
 ## Weather App
-Purpose of this app is to explore .NET 6 MVC for educational purposes. The app is able to display weather data using geolocation or city name.
+Purpose of this app is to explore .NET 6 MVC for educational purposes. The app is able to display weather data using geolocation or city name using openweathermap API.
 
 ## How to run?
 1. To run the app locally, first add your openweathermap.org key to the docker-compose.yml file in the root folder that displays this line by replacing "<insert_key>".
@@ -10,7 +10,7 @@ Purpose of this app is to explore .NET 6 MVC for educational purposes. The app i
 
         docker compose up
 
-3. To stop the container, run the followng.
+3. To stop the container, run the following.
 
         docker compose down
 
